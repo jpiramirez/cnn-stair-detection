@@ -1,0 +1,2 @@
+model_checkpoint_path: "mobilenet_weights_1"
+all_model_checkpoint_paths: "mobilenet_weights_1"
