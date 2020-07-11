@@ -64,17 +64,14 @@ def prepare_dataset( ds, shuffle_buffer_size = 1000, batch_size = 24 ) :
 train_dataset = tf.data.Dataset.from_tensor_slices( train_names )
 train_labeled_ds = train_dataset.map( process_data_train, num_parallel_calls = AUTOTUNE )
 train_ds = prepare_dataset( train_labeled_ds,
-                           shuffle_buffer_size = 13000,
+                           shuffle_buffer_size = len(train_names),
                            batch_size = G.BATCH_SIZE_TRAINING )
 
 val_dataset = tf.data.Dataset.from_tensor_slices( val_names )
 val_labeled_ds = val_dataset.map( process_data_val, num_parallel_calls = AUTOTUNE )
 val_ds = prepare_dataset( val_labeled_ds,
-                           shuffle_buffer_size = 1000,
+                           shuffle_buffer_size = len(val_names),
                            batch_size = G.BATCH_SIZE_VALIDATION )
-
-print( train_ds )
-print( val_ds ) 
 
 # CREATE THE MODEL
 model = M.make_mobilenet_model( G.IMG_SHAPE )
@@ -82,10 +79,8 @@ model = M.make_mobilenet_model( G.IMG_SHAPE )
 # TRAINING THE MODEL
 model.fit(
     train_ds,
-    #batch_size = G.BATCH_SIZE_TRAINING,
     epochs = G.EPOCHS,
     validation_data = val_ds,
-    #validation_batch_size= G.BATCH_SIZE_VALIDATION,
     )
 
 # SAVE THE MODEL

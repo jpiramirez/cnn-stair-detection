@@ -15,8 +15,6 @@ else :
     name = 'models/mobilenet_weights_%d' % (G.EPOCHS)
     model.load_weights( name )
 
-#model.summary()
-
 path = "Dataset/test/"
 cmd = path + "data.txt"
 f = open( cmd, 'r' )
@@ -32,12 +30,10 @@ for line in f :
                       float( row[ 5 ] ), float( row[ 6 ] ), float( row[ 7 ] ) ] )
     imu = np.reshape( imu, ( 1, 6 ) )
     if G.FUSION :
-        # CHECK TIME
         start_time = time.time()
         a = model.predict( { "img_input": img, "imu_input": imu } )
         time_sec = ( time.time() - start_time )
     else :
-        # CHECK TIME
         start_time = time.time()
         a = model.predict( img )
         time_sec = ( time.time() - start_time )

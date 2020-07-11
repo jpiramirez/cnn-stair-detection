@@ -1,7 +1,6 @@
 import tensorflow as tf
 import Models as M
 import Global as G
-#import pathlib
 import os
 import numpy as np
 import random
@@ -63,9 +62,9 @@ def process_data_train( file_path ) :
 
 def process_data_val( file_path ) :
     img = get_image( file_path )
-    a = tf.strings.regex_full_match( val_names, file_path )                   # Search in the name column
-    index = tf.where( a )                                                       # Find the index
-    index = tf.reshape( index, () )                                             # Flat the tensor
+    a = tf.strings.regex_full_match( val_names, file_path )
+    index = tf.where( a )
+    index = tf.reshape( index, () )
     return {'img_input': img, 'imu_input': val_imu[ index ]}, val_label[ index ]
 
 def prepare_dataset( ds, shuffle_buffer_size = 1000, batch_size = 24 ) :
@@ -78,17 +77,14 @@ def prepare_dataset( ds, shuffle_buffer_size = 1000, batch_size = 24 ) :
 train_dataset = tf.data.Dataset.from_tensor_slices( train_names )
 train_labeled_ds = train_dataset.map( process_data_train, num_parallel_calls = AUTOTUNE )
 train_ds = prepare_dataset( train_labeled_ds,
-                           shuffle_buffer_size = 1000,
+                           shuffle_buffer_size = len( train_names ),
                            batch_size = G.BATCH_SIZE_TRAINING )
 
 val_dataset = tf.data.Dataset.from_tensor_slices( val_names )
 val_labeled_ds = val_dataset.map( process_data_val, num_parallel_calls = AUTOTUNE )
 val_ds = prepare_dataset( val_labeled_ds,
-                           shuffle_buffer_size = 1000,
+                           shuffle_buffer_size = len( val_names ),
                            batch_size = G.BATCH_SIZE_VALIDATION )
-
-print( train_ds )
-print( val_ds ) 
 
 # CREATE THE MODEL
 model = M.make_mobilenet_fusion( G.IMG_SHAPE )
@@ -96,10 +92,8 @@ model = M.make_mobilenet_fusion( G.IMG_SHAPE )
 # TRAINING THE MODEL
 model.fit(
     train_ds,
-    #batch_size = G.BATCH_SIZE_TRAINING,
     epochs = G.EPOCHS,
     validation_data = val_ds,
-    #validation_batch_size = G.BATCH_SIZE_VALIDATION,
     )
 
 # SAVE THE MODEL
