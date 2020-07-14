@@ -32,7 +32,7 @@ train_names, train_label = loadData( "Dataset/train/" )
 val_names, val_label = loadData( "Dataset/validation/" )
 
 # GET DATA GIVEN A FILE PATH
-def get_image( file_path ) :
+def get_image_train( file_path ) :
     img = tf.io.read_file( file_path )                                          # Read an image from a path (here the path is a tensor)
     img = tf.image.decode_jpeg( img, channels = 3 )
     img = tf.image.convert_image_dtype( img, tf.float32 )                       # To convert to floats in the [0,1] range.
@@ -42,15 +42,23 @@ def get_image( file_path ) :
     img = tf.image.resize(img, [G.IMG_SIZE, G.IMG_SIZE])
     return img
 
+def get_image_val( file_path ) :
+    img = tf.io.read_file( file_path )                                          # Read an image from a path (here the path is a tensor)
+    img = tf.image.decode_jpeg( img, channels = 3 )
+    img = tf.image.convert_image_dtype( img, tf.float32 )                       # To convert to floats in the [0,1] range.
+    img = ( img - 0.5 ) / 0.5                                                   # To convert the image in the [-1,1] range.
+    img = tf.image.resize(img, [G.IMG_SIZE, G.IMG_SIZE])
+    return img
+
 def process_data_train( file_path ) :
-    img = get_image( file_path )
+    img = get_image_train( file_path )
     a = tf.strings.regex_full_match( train_names, file_path )                   # Search in the name column
     index = tf.where( a )                                                       # Find the index
     index = tf.reshape( index, () )                                             # Flat the tensor
     return img, train_label[ index ]
 
 def process_data_val( file_path ) :
-    img = get_image( file_path )
+    img = get_image_val( file_path )
     a = tf.strings.regex_full_match( val_names, file_path )                   # Search in the name column
     index = tf.where( a )                                                       # Find the index
     index = tf.reshape( index, () )                                             # Flat the tensor
