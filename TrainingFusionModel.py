@@ -92,11 +92,10 @@ model.load_weights( 'models/mobilenet_fusion_weights_100' )                     
 
 # TRAINING THE MODEL
 
-checkpoint_filepath = '/models/mobilenet_fusion_weights_{epoch:02d}-{val_acc:.2f}'
+checkpoint_filepath = '/models/mobilenet_fusion_weights_{epoch:02d}'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath = checkpoint_filepath,
     save_weights_only = True,
-    monitor = 'val_acc',
     mode = 'max',
     save_best_only = False )
 
