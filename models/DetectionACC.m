@@ -1,11 +1,12 @@
 clc
 
-data = readtable('data.txt');
+data = readtable('./../Dataset/test/data.txt');
 class = data{:,2};
-%prediction = load('prediction_fusion_e2.txt');
-%prediction = load('prediction_mobilenet_e2.txt');
 
-prediction = load('all_fusion_e2.txt');
+prediction = load('mobilenet_fusion_100.txt');
+%prediction = load('mobilenet_100.txt');
+
+prediction = prediction(:,1);
 
 % 1 - obstacle
 % 0 - non-obstacle
