@@ -88,12 +88,32 @@ val_ds = prepare_dataset( val_labeled_ds,
 
 # CREATE THE MODEL
 model = M.make_mobilenet_fusion( G.IMG_SHAPE )
+model.load_weights( 'models/mobilenet_fusion_weights_100' )                     # Current model
 
 # TRAINING THE MODEL
+
+checkpoint_filepath = '/models/mobilenet_fusion_weights_{epoch:02d}-{val_acc:.2f}'
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath = checkpoint_filepath,
+    save_weights_only = True,
+    monitor = 'val_acc',
+    mode = 'max',
+    save_best_only = False )
+
+def scheduler( epoch, lr ):
+    if ( epoch + 1 ) % 100 == 0:            # Update lr each 100 epochs
+        return lr * 0.1;                    # Beta = 0.1 (decay)
+    else:
+        return lr
+
+learning_rate_callback = tf.keras.callbacks.LearningRateScheduler( scheduler )
+
 model.fit(
     train_ds,
     epochs = G.EPOCHS,
+    initial_epoch = 100,                                                        # Start the training in this epoch
     validation_data = val_ds,
+    callbacks = [model_checkpoint_callback, learning_rate_callback ]
     )
 
 # SAVE THE MODEL
