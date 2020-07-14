@@ -8,7 +8,8 @@ import time
 # CREATE AND LOAD THE MODEL
 if G.FUSION :
     model = M.make_mobilenet_fusion( G.IMG_SHAPE )
-    name = 'models/mobilenet_fusion_weights_%d' % (G.EPOCHS)
+    name = 'models/mobilenet_fusion_weights_%d' % (150)
+    #name = 'models/mobilenet_fusion_weights_%d' % (G.EPOCHS)
     model.load_weights( name )
 else :
     model = M.make_mobilenet_model( G.IMG_SHAPE )

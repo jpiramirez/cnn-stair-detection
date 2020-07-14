@@ -49,7 +49,9 @@ def get_image( file_path ) :
     img = tf.io.read_file( file_path )                                          # Read an image from a path (here the path is a tensor)
     img = tf.image.decode_jpeg( img, channels = 3 )
     img = tf.image.convert_image_dtype( img, tf.float32 )                       # To convert to floats in the [0,1] range.
-    img = ( img - 0.5 ) / 0.5                                                     # To convert the image in the [-1,1] range.
+    if( tf.random.uniform(shape=()) > 0.5 ) :
+        image = tf.image.flip_left_right( image )                               # Random flip
+    img = ( img - 0.5 ) / 0.5                                                   # To convert the image in the [-1,1] range.
     img = tf.image.resize(img, [G.IMG_SIZE, G.IMG_SIZE])
     return img
 
@@ -88,14 +90,14 @@ val_ds = prepare_dataset( val_labeled_ds,
 
 # CREATE THE MODEL
 model = M.make_mobilenet_fusion( G.IMG_SHAPE )
-model.load_weights( 'models/mobilenet_fusion_weights_100' )                     # Current model
+#model.load_weights( 'models/mobilenet_fusion_weights_226' )                     # Current model
 
 # TRAINING THE MODEL
-
 checkpoint_filepath = '/models/mobilenet_fusion_weights_{epoch:02d}'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath = checkpoint_filepath,
     save_weights_only = True,
+    period = 50,
     mode = 'max',
     save_best_only = False )
 
@@ -110,7 +112,7 @@ learning_rate_callback = tf.keras.callbacks.LearningRateScheduler( scheduler )
 model.fit(
     train_ds,
     epochs = G.EPOCHS,
-    initial_epoch = 100,                                                        # Start the training in this epoch
+    #initial_epoch = 226,                                                        # Start the training in this epoch
     validation_data = val_ds,
     callbacks = [model_checkpoint_callback, learning_rate_callback ]
     )
