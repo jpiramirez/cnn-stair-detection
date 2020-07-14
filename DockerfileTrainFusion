@@ -1,13 +1,14 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
 
-
 #Copy the file in the host machine to the container
-COPY .   .
+COPY Dataset/train/ Dataset/train/
+COPY Dataset/validation/ Dataset/validation/
+COPY Global.py Global.py
+COPY Models.py Models.py
+COPY TrainingFusionModel.py TrainingFusionModel.py
 
 RUN python3 -m pip install matplotlib
 RUN python3 -m pip install pillow
 
 # Execute the program
-CMD python3 TraininingFusionModel.py
-
-
+CMD python3 TrainingFusionModel.py
