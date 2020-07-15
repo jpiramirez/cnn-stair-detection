@@ -25,7 +25,7 @@ def make_mobilenet_fusion( myshape ) :
         inputs=[img_input, imu_input],
         outputs=[ prediction ],
     )
-    model.compile(optimizer=keras.optimizers.Adam(1e-4),                        # 0-99 (1e-4), 100-199 (1e-5), 200-299 (1e-6), so on
+    model.compile(optimizer=keras.optimizers.Adam(1e-5),                        # 0-99 (1e-4), 100-199 (1e-5), 200-299 (1e-6), so on
                   loss=keras.losses.BinaryCrossentropy(from_logits=True),
                   metrics=['accuracy'])
 

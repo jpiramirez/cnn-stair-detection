@@ -1,7 +1,6 @@
 import tensorflow as tf
 import Models as M
 import Global as G
-#import pathlib
 import os
 import numpy as np
 import random
@@ -37,7 +36,7 @@ def get_image_train( file_path ) :
     img = tf.image.decode_jpeg( img, channels = 3 )
     img = tf.image.convert_image_dtype( img, tf.float32 )                       # To convert to floats in the [0,1] range.
     if( tf.random.uniform(shape=()) > 0.5 ) :
-        image = tf.image.flip_left_right( image )                               # Random flip
+        img = tf.image.flip_left_right( img )                                   # Random flip
     img = ( img - 0.5 ) / 0.5                                                   # To convert the image in the [-1,1] range.
     img = tf.image.resize(img, [G.IMG_SIZE, G.IMG_SIZE])
     return img
