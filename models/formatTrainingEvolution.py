@@ -13,4 +13,4 @@ def loadNames( file ) :
     f.close()
     return 0
 
-a = loadNames( 'fusion_train_evo_raw.txt' )
+a = loadNames( 'mobilenet_train_evo_raw.txt' )
