@@ -3,9 +3,8 @@ clc
 data = readtable('./../Dataset/test/data.txt');
 class = data{:,2};
 
-prediction = load('mobilenet_fusion_250.txt');
+prediction = load('mobilenet_fusion_1000_test.txt');
 %prediction = load('mobilenet_fusion_100.txt');
-
 %prediction = load('mobilenet_100.txt');
 
 prediction = prediction(:,1);
@@ -16,8 +15,8 @@ tp = 0;
 tn = 0;
 fp = 0;
 fn = 0;
-p = sum( class );
-n = length(class) - p;
+p = sum( class )
+n = length(class) - p
 for i = 1 : length( class ) 
     if class(i) == 1 && prediction(i) == 1 
         tp = tp + 1;

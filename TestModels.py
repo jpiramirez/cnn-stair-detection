@@ -8,7 +8,7 @@ import time
 # CREATE AND LOAD THE MODEL
 if G.FUSION :
     model = M.make_mobilenet_fusion( G.IMG_SHAPE )
-    name = 'models/mobilenet_fusion_weights_%d' % (150)
+    name = 'models/mobilenet_fusion_weights_%d' % (1000)
     #name = 'models/mobilenet_fusion_weights_%d' % (G.EPOCHS)
     model.load_weights( name )
 else :
@@ -16,7 +16,10 @@ else :
     name = 'models/mobilenet_weights_%d' % (G.EPOCHS)
     model.load_weights( name )
 
-path = "Dataset/test/"
+#path = "Dataset/test/"
+#path = "Dataset/validation/"
+path = "Dataset/train/"
+
 cmd = path + "data.txt"
 f = open( cmd, 'r' )
 for line in f :

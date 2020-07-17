@@ -15,6 +15,12 @@ def make_mobilenet_model( myshape ) :
 
 def make_mobilenet_fusion( myshape ) :
     base_model = keras.applications.MobileNet(input_shape = myshape, include_top = False,weights = 'imagenet')
+    #print("Number of layers in the base model: ", len(base_model.layers))
+    base_model.trainable = True
+    fine_tune_at = 80  # Fine-tune from this layer onwards
+    for layer in base_model.layers[:fine_tune_at]: # Freeze all the layers before the `fine_tune_at` layer
+        layer.trainable =  False
+
     img_input = keras.Input(shape= myshape, name="img_input")
     x = base_model( img_input )
     x = layers.GlobalAveragePooling2D()( x )
@@ -25,7 +31,7 @@ def make_mobilenet_fusion( myshape ) :
         inputs=[img_input, imu_input],
         outputs=[ prediction ],
     )
-    model.compile(optimizer=keras.optimizers.Adam(1e-8),                        # 0-99 (1e-4), 100-199 (1e-5), 200-299 (1e-6), 300-399 (1e-7), so on
+    model.compile(optimizer=keras.optimizers.Adam(1e-4),                        # 0-99 (1e-4), 100-199 (1e-5), 200-299 (1e-6), 300-399 (1e-7), so on
                   loss=keras.losses.BinaryCrossentropy(from_logits=True),
                   metrics=['accuracy'])
 

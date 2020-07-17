@@ -98,7 +98,7 @@ val_ds = prepare_dataset( val_labeled_ds,
 
 # CREATE THE MODEL
 model = M.make_mobilenet_fusion( G.IMG_SHAPE )
-model.load_weights( 'models/mobilenet_fusion_weights_400' )                     # Current model
+#model.load_weights( 'models/mobilenet_fusion_weights_400' )                     # Current model
 
 # TRAINING THE MODEL
 checkpoint_filepath = '/models/mobilenet_fusion_weights_{epoch:02d}'
@@ -120,7 +120,7 @@ learning_rate_callback = tf.keras.callbacks.LearningRateScheduler( scheduler )
 model.fit(
     train_ds,
     epochs = G.EPOCHS,
-    initial_epoch = 400,                                                        # Start the training in this epoch
+    #initial_epoch = 400,                                                        # Start the training in this epoch
     validation_data = val_ds,
     callbacks = [model_checkpoint_callback, learning_rate_callback ]
     )
