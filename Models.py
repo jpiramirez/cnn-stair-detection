@@ -7,7 +7,7 @@ def make_mobilenet_model( myshape ) :
     global_average_layer = layers.GlobalAveragePooling2D()
     prediction_layer = layers.Dense( 1, activation = 'sigmoid' )
     model = keras.Sequential([ base_model, global_average_layer,prediction_layer])
-    model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
+    model.compile(optimizer=tf.keras.optimizers.Adam(1e-10),                     # 500-599 (1e-9), 600-699 (1e-10)
               loss=keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
@@ -25,7 +25,7 @@ def make_mobilenet_fusion( myshape ) :
         inputs=[img_input, imu_input],
         outputs=[ prediction ],
     )
-    model.compile(optimizer=keras.optimizers.Adam(1e-8),                        # 0-99 (1e-4), 100-199 (1e-5), 200-299 (1e-6), 300-399 (1e-7), so on
+    model.compile(optimizer=keras.optimizers.Adam(1e-8),                        # 0-99 (1e-4), 100-199 (1e-5), 200-299 (1e-6), 300-399 (1e-7), 400-499 (1e-8), so on
                   loss=keras.losses.BinaryCrossentropy(from_logits=True),
                   metrics=['accuracy'])
 
