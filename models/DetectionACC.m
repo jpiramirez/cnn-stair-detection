@@ -3,9 +3,10 @@ clc
 data = readtable('./../Dataset/test/data.txt');
 class = data{:,2};
 
-prediction = load('mobilenet_fusion_1000_test.txt');
-%prediction = load('mobilenet_fusion_100.txt');
-%prediction = load('mobilenet_100.txt');
+%prediction = load('mobilenet_fusion_1000_test.txt');
+
+%prediction = load('mobilenet_600_test_mac.txt');
+prediction = load('mobilenet_fusion_600_test_mac.txt');
 
 prediction = prediction(:,1);
 
