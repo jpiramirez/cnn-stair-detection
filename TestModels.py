@@ -15,6 +15,16 @@ else :
     name = 'models/mobilenet_weights_%d' % (G.EPOCHS)
     model.load_weights( name )
 
+
+#G.FUSION = False
+#model = M.make_mobilenet_model( G.IMG_SHAPE )
+#name = './../backup_models/07.11.2020/mobilenet_weights_100'
+#name = './../backup_models/07.17.2020/mobilenet_weights_550'
+#G.FUSION = True
+#model = M.make_mobilenet_fusion( G.IMG_SHAPE )
+#name = './../backup_models/07.17.2020/mobilenet_fusion_weights_950'
+#model.load_weights( name )
+
 path = "Dataset/test/"
 #path = "Dataset/validation/"
 #path = "Dataset/train/"

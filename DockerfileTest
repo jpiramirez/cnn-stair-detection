@@ -11,6 +11,4 @@ RUN python3 -m pip install matplotlib
 RUN python3 -m pip install pillow
 
 # Execute the program
-CMD python3 TestModels.py > models/mobilenet_600_test.txt
-
-
+CMD python3 TestModels.py > models/mobilenet_400_test.txt
