@@ -25,9 +25,9 @@ else :
 #name = './../backup_models/07.17.2020/mobilenet_fusion_weights_950'
 #model.load_weights( name )
 
-path = "Dataset/test/"
+#path = "Dataset/test/"
 #path = "Dataset/validation/"
-#path = "Dataset/train/"
+path = "Dataset/train/"
 
 cmd = path + "data.txt"
 f = open( cmd, 'r' )

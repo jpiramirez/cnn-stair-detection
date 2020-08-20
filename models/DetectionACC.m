@@ -1,17 +1,23 @@
 
 clc
 
-data = readtable('./../Dataset/test/data.txt');
+data = readtable('./../Dataset/train/data.txt');
 class = data{:,2};
 
 %prediction = load('mobilenet_fusion_1000_test.txt');
 %prediction = load('mobilenet_fusion_600_test.txt');
-
-
 %prediction = load('mobilenet_600_test_mac.txt');
-prediction = load('mobilenet_fusion_600_test_mac.txt');
+%prediction = load('mobilenet_fusion_600_test_mac.txt');
 
+%prediction = load('mobilenet_fusion_400_train.txt');
+prediction = load('mobilenet_400_train.txt');
+
+time_t = prediction(2:end,2);
 prediction = prediction(:,1);
+
+disp('time')
+mean(time_t)
+
 
 % 1 - obstacle
 % 0 - non-obstacle
@@ -32,7 +38,14 @@ for i = 1 : length( class )
         fp = fp + 1;            
     end
 end
-tpr = tp/p
-fnr = fn/p
-tnr = tn/n
-fpr = fp/n
+tpr = tp/p;
+fnr = fn/p;
+tnr = tn/n;
+fpr = fp/n;
+
+den = sqrt( (tp+fp)*(tp+fn)*(tn+fp)*(tn+fn) );
+
+specificity = tn/(tn + fp)
+sensitivity = tp/(tp + fn)
+acc = (tp + tn) / (p + n)
+mcc = (tp*tn - fp*fn) / den
