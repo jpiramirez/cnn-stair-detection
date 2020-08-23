@@ -117,9 +117,6 @@ def scheduler( epoch, lr ):
 
 learning_rate_callback = tf.keras.callbacks.LearningRateScheduler( scheduler )
 
-model.summary()
-
-'''
 model.fit(
     train_ds,
     epochs = G.EPOCHS,
@@ -127,7 +124,6 @@ model.fit(
     validation_data = val_ds,
     callbacks = [model_checkpoint_callback, learning_rate_callback ]
     )
-'''
 
 # SAVE THE MODEL
 path = 'models/'

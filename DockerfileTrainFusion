@@ -5,10 +5,10 @@ COPY Dataset/train/ Dataset/train/
 COPY Dataset/validation/ Dataset/validation/
 COPY Global.py Global.py
 COPY Models.py Models.py
-COPY TrainingFusionModel.py TrainingFusionModel.py
+COPY Class3TrainingFusionModel.py Class3TrainingFusionModel.py
 
 RUN python3 -m pip install matplotlib
 RUN python3 -m pip install pillow
 
 # Execute the program
-CMD python3 TrainingFusionModel.py
+CMD python3 Class3TrainingFusionModel.py > models/fusion_evolution_raw.txt
