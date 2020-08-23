@@ -1,0 +1,2 @@
+model_checkpoint_path: "mobilenet_fusion_3class_weights_500"
+all_model_checkpoint_paths: "mobilenet_fusion_3class_weights_500"
