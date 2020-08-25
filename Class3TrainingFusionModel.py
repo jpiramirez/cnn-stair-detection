@@ -122,7 +122,8 @@ model.fit(
     epochs = G.EPOCHS,
     #initial_epoch = 400,                                                        # Start the training in this epoch
     validation_data = val_ds,
-    callbacks = [model_checkpoint_callback, learning_rate_callback ]
+    callbacks = [model_checkpoint_callback]
+    #callbacks = [model_checkpoint_callback, learning_rate_callback ]
     )
 
 # SAVE THE MODEL
