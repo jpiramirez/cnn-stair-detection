@@ -1,0 +1,7 @@
+START                        END                         LABEL (1-UP,2-DOWN)
+1873.jpg                     1966.jpg                    2
+3233.jpg                     3268.jpg                    1
+3693.jpg                     3797.jpg                    1
+3965.jpg                     4057.jpg                    2
+4217.jpg                     4254.jpg                    2
+5630.jpg                     5723.jpg                    1

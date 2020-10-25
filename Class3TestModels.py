@@ -8,13 +8,13 @@ import time
 # CREATE AND LOAD THE MODEL
 if G.FUSION :
     model = M.make_mobilenet_fusion_3class( G.IMG_SHAPE )
-    #name = 'models/mobilenet_fusion_3class_weights_%d' % (G.EPOCHS)
-    name = './../backup_models/08.21.2020/mobilenet_fusion_3class_weights_%d' % (G.EPOCHS)
+    name = 'models/mobilenet_fusion_3class_weights_%d' % (G.EPOCHS)
+    #name = './../backup_models/08.21.2020/mobilenet_fusion_3class_weights_%d' % (G.EPOCHS)
     model.load_weights( name )
 else :
     model = M.make_mobilenet_model_3class( G.IMG_SHAPE )
-    #name = 'models/mobilenet_3class_weights_%d' % (G.EPOCHS)
-    name = './../backup_models/08.21.2020/mobilenet_3class_weights_%d' % (G.EPOCHS)
+    name = 'models/mobilenet_3class_weights_%d' % (G.EPOCHS)
+    #name = './../backup_models/08.21.2020/mobilenet_3class_weights_%d' % (G.EPOCHS)
     model.load_weights( name )
 
 path = "Dataset/test/"
