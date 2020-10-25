@@ -9,7 +9,7 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 # LOAD DATA (TEXT MODE)
 def loadData( path ) :
-    cmd = path + "data_3class.txt"
+    cmd = path + "data_3class_new.txt"  #"data_3class.txt"
     f = open( cmd, 'r' )
     names = [] # Create a list with the image names
     label = [] # Create a list with the labels
@@ -122,8 +122,8 @@ model.fit(
     epochs = G.EPOCHS,
     #initial_epoch = 400,                                                        # Start the training in this epoch
     validation_data = val_ds,
-    callbacks = [model_checkpoint_callback]
-    #callbacks = [model_checkpoint_callback, learning_rate_callback ]
+    #callbacks = [model_checkpoint_callback]
+    callbacks = [model_checkpoint_callback, learning_rate_callback ]
     )
 
 # SAVE THE MODEL

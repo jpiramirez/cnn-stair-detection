@@ -19,7 +19,7 @@ else :
 
 path = "Dataset/test/"
 
-cmd = path + "data.txt"
+cmd = path + "data_3class_new.txt"  #"data_3class.txt"
 f = open( cmd, 'r' )
 for line in f :
     row = line.split()

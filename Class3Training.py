@@ -9,7 +9,7 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 # LOAD DATA (TEXT MODE)
 def loadData( path ) :
-    cmd = path + "data_3class.txt"
+    cmd = path + "data_3class_new.txt"  #"data_3class.txt"
     f = open( cmd, 'r' )
     names = [] # Create a list with the image names
     label = [] # Create a list with the labels
