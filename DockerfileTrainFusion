@@ -1,8 +1,13 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
 
-#Copy the file in the host machine to the container
-COPY Dataset/train/ Dataset/train/
-COPY Dataset/validation/ Dataset/validation/
+#COPY Dataset/train/ Dataset/train/
+COPY Dataset/train/all/ Dataset/train/all/
+COPY Dataset/train/data_3class_new.txt Dataset/train/data_3class_new.txt
+
+#COPY Dataset/validation/ Dataset/validation/
+COPY Dataset/validation/all/ Dataset/validation/all/
+COPY Dataset/validation/data_3class_new.txt Dataset/validation/data_3class_new.txt
+
 COPY Global.py Global.py
 COPY Models.py Models.py
 COPY Class3TrainingFusionModel.py Class3TrainingFusionModel.py
@@ -11,4 +16,4 @@ RUN python3 -m pip install matplotlib
 RUN python3 -m pip install pillow
 
 # Execute the program
-CMD python3 Class3TrainingFusionModel.py > models/fusion_evolution_raw.txt
+CMD python3 Class3TrainingFusionModel.py > models/fusion_3class_train_evo_raw.txt
