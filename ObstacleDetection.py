@@ -1,10 +1,42 @@
 import cv2
 import os
+import sys
 
-# PARAMETERS
-FUSION = True                   # Type of model: False (mobilenet), True (Fusion)
-MODEL = 400                     # Model to be tested
-path = "Dataset/test/"          # Dataset:  "Dataset/validation/", "Dataset/train/"
+# HELP DISPLAY
+if len( sys.argv ) == 2:
+    if sys.argv[ 1 ] == '--help':
+        print('\n Obstacle detection \n')
+        print(' This command: python3 ObstacleDection.py --help')
+        print(' Template:     python3 ObstacleDection.py --options values > labels.txt');
+        print(' Example:      python3 ObstacleDection.py --dataset Dataset/test > labels')
+        print('\n List of options')
+        print('    --dataset: <string>  Folder with the dataset, default: Dataset/test');
+        print('    --predict: <string>  Labels with the prediction, default: result/mobilenet_400_test.txt');
+        print('    --odir   : <string>  Labels with the prediction, default: result/test_mobilenet_400');
+        sys.exit( 1 )
+
+# DEFAULT PARAMETERS
+DATASET = 'Dataset/test'
+PREDICTION_LB = 'result/mobilenet_400_test.txt'
+ODIR = 'test_mobilenet_400'
+
+# LOAD PARAMETER VALUES
+i = 1
+while i < len( sys.argv ) :
+    cmd = str( sys.argv[ i ] )
+    i = i + 1
+    if cmd == '--dataset' :
+        DATASET = str( sys.argv[ i ] )
+    elif cmd == '--predict' :
+        PREDICTION_LB = str( sys.argv[ i ] )
+    elif cmd == '--odir' :
+        ODIR = str( sys.argv[ i ] )
+    i = i + 1
+
+print('Dataset           : ', DATASET)
+print('Prediction labels : ', PREDICTION_LB)
+print('Output directory  : ', ODIR)
+
 
 def loadNames( path ) :
     cmd = path + "data.txt"
@@ -27,18 +59,9 @@ def loadLabels( file ) :
     f.close()
     return lb
 
-model_name = 'mobilenet' # fusion, mobilenet
-mode = 'test' # test, validation, train
-
-
-names, ref_lb = loadNames( path )
-lb = loadLabels( 'models/mobilenet_' + str( model ) + '_' + mode + '.txt' ) # For mobilenet
-#lb = loadLabels( 'models/mobilenet_'+ model_name + '_' + str( model ) + '_' + mode + '.txt' ) # for fusion
-
-path = mode + '_' + model_name + '_' + str( model ) + '/'   # Create output directory
-cmd = 'mkdir ' + path
-os.system( cmd )
-
+names, ref_lb = loadNames( DATASET + "/" )
+lb = loadLabels( PREDICTION_LB )
+os.system( 'mkdir ' + ODIR  )
 for i in range( len( names ) ) :
     img = cv2.imread( names[ i ] )
     if lb[ i ] == 1 :
@@ -48,13 +71,13 @@ for i in range( len( names ) ) :
         img = cv2.rectangle(img, (0,0) , (350, 80), (50, 205, 50), -1)
         img = cv2.putText( img, 'Non-obstacle', (10,55), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,0,0), 3, cv2.LINE_AA )
     obs = 'obs' if ref_lb[ i ] else 'non-obs'
-    new_name = names[ i ].replace(folder,"")
+    new_name = names[ i ].replace(DATASET+"/","")
     new_name = new_name.replace('non_obs/','')
     new_name = new_name.replace('obs/','')
     new_name = new_name.replace('test/','')
     if ref_lb[ i ] == lb[ i ] :
-        cmd = path + 'ok_ref_' + obs + '_' + new_name
+        cmd = ODIR  + '/ok_ref_' + obs + '_' + new_name
     else :
-        cmd = path + 'bad_ref_' + obs + '_' +  new_name
+        cmd = ODIR + '/bad_ref_' + obs + '_' +  new_name
     print( cmd )
     cv2.imwrite( cmd, img )

@@ -1,7 +1,7 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
 
-COPY Dataset/train/ Dataset/train/
-COPY Dataset/validation/ Dataset/validation/
+COPY DatasetSmall/train/ DatasetSmall/train/
+COPY DatasetSmall/validation/ DatasetSmall/validation/
 
 COPY Global.py Global.py
 COPY Models.py Models.py
@@ -11,4 +11,4 @@ RUN python3 -m pip install matplotlib
 RUN python3 -m pip install pillow
 
 # Execute the program
-CMD python3 TrainingFusionModel.py > models/fusion_report.txt
+CMD python3 TrainingFusionModel.py --dataset DatasetSmall --odir myoutput --epochs 10 --period 2 --batchtra 10 --batchval 20 > myoutput/fusion_report.txt

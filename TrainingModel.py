@@ -11,9 +11,9 @@ AUTOTUNE = tf.data.experimental.AUTOTUNE
 if len( sys.argv ) == 2:
     if sys.argv[ 1 ] == '--help':
         print('\n Mobilenet training\n')
-        print(' This command: ./TrainingModel.py --help')
-        print(' Template:     ./TrainingModel.py --options values');
-        print(' Example:      ./TrainingModel.py --dataset Dataset/')
+        print(' This command: python3 TrainingModel.py --help')
+        print(' Template:     python3 TrainingModel.py --options values > report.txt');
+        print(' Example:      python3 TrainingModel.py --dataset Dataset/ > report.txt')
         print('\n List of options')
         print('    --dataset  : <string>  Folder with the dataset, default: Dataset');
         print('    --odir     : <string>   Name of the output directory, default: models');
@@ -143,7 +143,7 @@ val_ds = prepare_dataset( val_labeled_ds,
 
 # CREATE THE MODEL
 model = M.make_mobilenet_model( (IMG_SIZE, IMG_SIZE, 3) )
-checkpoint_filepath = '/' + ODIR + '/mobilenet_weights_{epoch:02d}'
+checkpoint_filepath = ODIR + '/mobilenet_weights_{epoch:02d}'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath = checkpoint_filepath,
     save_weights_only = True,
