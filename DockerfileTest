@@ -1,7 +1,7 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
 
 #Copy the file in the host machine to the container
-COPY DatasetSmall/test/ DatasetSmall/test/
+COPY Dataset/test/ Dataset/test/
 COPY models/ models/
 COPY Models.py Models.py
 COPY TestModels.py TestModels.py
@@ -10,5 +10,5 @@ RUN python3 -m pip install matplotlib
 RUN python3 -m pip install pillow
 
 # Execute the program
-#CMD python3 TestModels.py --dataset DatasetSmall/test --modeldir myoutput --modeltype mobilenet --modelid 10 > myoutput/labels_mobilenet.txt
-CMD python3 TestModels.py --dataset DatasetSmall/test --modeldir myoutput --modeltype fusion --modelid 10 > myoutput/labels_fusion.txt
+#CMD python3 TestModels.py --dataset Dataset/test --modeldir models --modeltype mobilenet --modelid 400 > models/mobilenet_400_test.txt
+CMD python3 TestModels.py --dataset Dataset/test --modeldir models --modeltype fusion --modelid 400 > models/mobilenet_fusion_400_test.txt

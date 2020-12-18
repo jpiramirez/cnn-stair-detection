@@ -1,7 +1,7 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
 
-COPY DatasetSmall/train/ DatasetSmall/train/
-COPY DatasetSmall/validation/ DatasetSmall/validation/
+COPY Dataset/train/ Dataset/train/
+COPY Dataset/validation/ Dataset/validation/
 
 COPY Models.py Models.py
 COPY TrainingModel.py TrainingModel.py
@@ -10,4 +10,4 @@ RUN python3 -m pip install matplotlib
 RUN python3 -m pip install pillow
 
 # Execute the program
-CMD python3 TrainingModel.py --dataset DatasetSmall --odir myoutput --epochs 10 --period 2 --batchtra 10 --batchval 20 > myoutput/mobilenet_report.txt
+CMD python3 TrainingModel.py --dataset Dataset --odir models > models/mobilenet_report.txt
