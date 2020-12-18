@@ -3,7 +3,6 @@ FROM tensorflow/tensorflow:latest-gpu-py3
 COPY DatasetSmall/train/ DatasetSmall/train/
 COPY DatasetSmall/validation/ DatasetSmall/validation/
 
-COPY Global.py Global.py
 COPY Models.py Models.py
 COPY TrainingModel.py TrainingModel.py
 

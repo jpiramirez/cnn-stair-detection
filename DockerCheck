@@ -1,0 +1,7 @@
+FROM tensorflow/tensorflow:latest-gpu-py3
+
+#Copy the file in the host machine to the container
+COPY CheckVersions.py CheckVersions.py
+
+# Execute the program
+CMD python3 CheckVersions.py
