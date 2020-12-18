@@ -5,29 +5,18 @@ import tensorflow as tf
 import sys
 import time
 
+# PARAMETERS
+FUSION = True                   # Type of model: False (mobilenet), True (Fusion)
+MODEL = 400                     # Model to be tested
+path = "Dataset/test/"          # Dataset:  "Dataset/validation/", "Dataset/train/"
+
 # CREATE AND LOAD THE MODEL
-if G.FUSION :
+if FUSION :
     model = M.make_mobilenet_fusion( G.IMG_SHAPE )
-    name = 'models/mobilenet_fusion_weights_%d' % (G.EPOCHS)
-    model.load_weights( name )
+    model.load_weights( 'models/mobilenet_fusion_weights_' + str(MODEL) )
 else :
     model = M.make_mobilenet_model( G.IMG_SHAPE )
-    name = 'models/mobilenet_weights_%d' % (G.EPOCHS)
-    model.load_weights( name )
-
-
-#G.FUSION = False
-#model = M.make_mobilenet_model( G.IMG_SHAPE )
-#name = './../backup_models/07.11.2020/mobilenet_weights_100'
-#name = './../backup_models/07.17.2020/mobilenet_weights_550'
-#G.FUSION = True
-#model = M.make_mobilenet_fusion( G.IMG_SHAPE )
-#name = './../backup_models/07.17.2020/mobilenet_fusion_weights_950'
-#model.load_weights( name )
-
-#path = "Dataset/test/"
-#path = "Dataset/validation/"
-path = "Dataset/train/"
+    model.load_weights( 'models/mobilenet_weights_' +  str( MODEL ) )
 
 cmd = path + "data.txt"
 f = open( cmd, 'r' )
@@ -52,5 +41,4 @@ for line in f :
         time_sec = ( time.time() - start_time )
     prediction = int( a[ 0 ][ 0 ] >= 0.5 )
     print( prediction, time_sec )
-
 f.close()

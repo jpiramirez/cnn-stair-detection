@@ -1,6 +1,11 @@
 import cv2
 import os
 
+# PARAMETERS
+FUSION = True                   # Type of model: False (mobilenet), True (Fusion)
+MODEL = 400                     # Model to be tested
+path = "Dataset/test/"          # Dataset:  "Dataset/validation/", "Dataset/train/"
+
 def loadNames( path ) :
     cmd = path + "data.txt"
     f = open( cmd, 'r' )
@@ -22,24 +27,22 @@ def loadLabels( file ) :
     f.close()
     return lb
 
-model = 400
 model_name = 'mobilenet' # fusion, mobilenet
 mode = 'test' # test, validation, train
 
-folder = 'Dataset/' + mode + '/'
-names, ref_lb = loadNames( folder )
+
+names, ref_lb = loadNames( path )
 lb = loadLabels( 'models/mobilenet_' + str( model ) + '_' + mode + '.txt' ) # For mobilenet
 #lb = loadLabels( 'models/mobilenet_'+ model_name + '_' + str( model ) + '_' + mode + '.txt' ) # for fusion
 
 path = mode + '_' + model_name + '_' + str( model ) + '/'   # Create output directory
-
 cmd = 'mkdir ' + path
 os.system( cmd )
 
 for i in range( len( names ) ) :
     img = cv2.imread( names[ i ] )
     if lb[ i ] == 1 :
-        img = cv2.rectangle(img, (0,0) , (230, 80), (0, 0, 255) , -1) # start_point (top left), end_point (bottom right), color (BGR), thickness( fill -1)
+        img = cv2.rectangle(img, (0,0) , (230, 80), (0, 0, 255) , -1)
         img = cv2.putText( img, 'Obstacle', (10,55), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 3, cv2.LINE_AA )
     else :
         img = cv2.rectangle(img, (0,0) , (350, 80), (50, 205, 50), -1)
@@ -55,7 +58,3 @@ for i in range( len( names ) ) :
         cmd = path + 'bad_ref_' + obs + '_' +  new_name
     print( cmd )
     cv2.imwrite( cmd, img )
-
-#cv2.imshow('image', img)
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()

@@ -1,11 +1,69 @@
 import tensorflow as tf
 import Models as M
-import Global as G
 import os
+import sys
 import numpy as np
 import random
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
+
+# HELP DISPLAY
+if len( sys.argv ) == 2:
+    if sys.argv[ 1 ] == '--help':
+        print('\n Mobilenet training\n')
+        print(' This command: ./TrainingModel.py --help')
+        print(' Template:     ./TrainingModel.py --options values');
+        print(' Example:      ./TrainingModel.py --dataset Dataset/')
+        print('\n List of options')
+        print('    --dataset  : <string>  Folder with the dataset, default: Dataset');
+        print('    --odir     : <string>   Name of the output directory, default: models');
+        print('    --epochs   : <integer>  Number of epochs, default: 500');
+        print('    --period   : <integer>  Period to save the model, default: 50');
+        print('    --imgsize  : <integer>  Image size, default: 224')
+        print('    --batchtra : <integer>  Batch size for training, default: 24')
+        print('    --batchval : <integer>  Batch size for validation, default: 64')
+        sys.exit( 1 )
+
+# DEFAULT PARAMETERS
+DATASET = 'Dataset'
+ODIR = 'models'
+EPOCHS = 500
+PERIOD = 50
+IMG_SIZE = 224
+BATCH_SIZE_TRAINING = 24
+BATCH_SIZE_VALIDATION = 64
+
+# LOAD PARAMETER VALUES
+i = 1
+while i < len( sys.argv ) :
+    cmd = str( sys.argv[ i ] )
+    i = i + 1
+    if cmd == '--dataset' :
+        DATASET = str( sys.argv[ i ] )
+    elif cmd == '--odir' :
+        ODIR = str( sys.argv[ i ] )
+    elif cmd == "--epochs" :
+        EPOCHS = int( sys.argv[ i ] )
+    elif cmd == '--period' :
+        PERIOD = int( sys.argv[ i ] )
+    elif cmd == '--imgsize' :
+        IMG_SIZE = int( sys.argv[ i ] )
+    elif cmd == '--batchtra' :
+        BATCH_SIZE_TRAINING = int( sys.argv[ i ] )
+    elif cmd == '--batchval' :
+        BATCH_SIZE_VALIDATION = int( sys.argv[ i ] )
+    i = i + 1
+
+# DISPLAY PARAMETERS
+print('Dataset         : ', DATASET)
+print('Output directory: ', ODIR)
+print('Epochs          : ', EPOCHS)
+print('Period          : ', PERIOD)
+print('Image size      : ', IMG_SIZE)
+print('Batch size(tra) : ', BATCH_SIZE_TRAINING)
+print('Batch size(val) : ', BATCH_SIZE_VALIDATION)
+
+os.system( 'mkdir ' + ODIR )
 
 # LOAD DATA (TEXT MODE)
 def loadData( path ) :
@@ -27,8 +85,8 @@ def loadData( path ) :
     label_tensor = tf.convert_to_tensor( label, dtype = tf.int32 )
     return names_tensor, label_tensor
 
-train_names, train_label = loadData( "Dataset/train/" )
-val_names, val_label = loadData( "Dataset/validation/" )
+train_names, train_label = loadData( DATASET + "/train/" )
+val_names, val_label = loadData( DATASET + "/validation/" )
 
 # GET DATA GIVEN A FILE PATH
 def get_image_train( file_path ) :
@@ -38,7 +96,7 @@ def get_image_train( file_path ) :
     if( tf.random.uniform(shape=()) > 0.5 ) :
         img = tf.image.flip_left_right( img )                                   # Random flip
     img = ( img - 0.5 ) / 0.5                                                   # To convert the image in the [-1,1] range.
-    img = tf.image.resize(img, [G.IMG_SIZE, G.IMG_SIZE])
+    img = tf.image.resize(img, [IMG_SIZE, IMG_SIZE])
     return img
 
 def get_image_val( file_path ) :
@@ -46,7 +104,7 @@ def get_image_val( file_path ) :
     img = tf.image.decode_jpeg( img, channels = 3 )
     img = tf.image.convert_image_dtype( img, tf.float32 )                       # To convert to floats in the [0,1] range.
     img = ( img - 0.5 ) / 0.5                                                   # To convert the image in the [-1,1] range.
-    img = tf.image.resize(img, [G.IMG_SIZE, G.IMG_SIZE])
+    img = tf.image.resize(img, [IMG_SIZE, IMG_SIZE])
     return img
 
 def process_data_train( file_path ) :
@@ -58,7 +116,7 @@ def process_data_train( file_path ) :
 
 def process_data_val( file_path ) :
     img = get_image_val( file_path )
-    a = tf.strings.regex_full_match( val_names, file_path )                   # Search in the name column
+    a = tf.strings.regex_full_match( val_names, file_path )                     # Search in the name column
     index = tf.where( a )                                                       # Find the index
     index = tf.reshape( index, () )                                             # Flat the tensor
     return img, val_label[ index ]
@@ -69,28 +127,27 @@ def prepare_dataset( ds, shuffle_buffer_size = 1000, batch_size = 24 ) :
     ds = ds.prefetch( buffer_size=AUTOTUNE )                                    # Lets the dataset fetch batches in the background while the model is training.
     return ds
 
+
 # CREATE THE DATASET
 train_dataset = tf.data.Dataset.from_tensor_slices( train_names )
 train_labeled_ds = train_dataset.map( process_data_train, num_parallel_calls = AUTOTUNE )
 train_ds = prepare_dataset( train_labeled_ds,
                            shuffle_buffer_size = len(train_names),
-                           batch_size = G.BATCH_SIZE_TRAINING )
+                           batch_size = BATCH_SIZE_TRAINING )
 
 val_dataset = tf.data.Dataset.from_tensor_slices( val_names )
 val_labeled_ds = val_dataset.map( process_data_val, num_parallel_calls = AUTOTUNE )
 val_ds = prepare_dataset( val_labeled_ds,
                            shuffle_buffer_size = len(val_names),
-                           batch_size = G.BATCH_SIZE_VALIDATION )
+                           batch_size = BATCH_SIZE_VALIDATION )
 
 # CREATE THE MODEL
-model = M.make_mobilenet_model( G.IMG_SHAPE )
-model.load_weights( 'models/mobilenet_weights_600' )
-
-checkpoint_filepath = '/models/mobilenet_weights_{epoch:02d}'
+model = M.make_mobilenet_model( (IMG_SIZE, IMG_SIZE, 3) )
+checkpoint_filepath = '/' + ODIR + '/mobilenet_weights_{epoch:02d}'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath = checkpoint_filepath,
     save_weights_only = True,
-    period = 50,
+    period = PERIOD,
     mode = 'max',
     save_best_only = False )
 
@@ -104,15 +161,10 @@ learning_rate_callback = tf.keras.callbacks.LearningRateScheduler( scheduler )
 
 model.fit(
     train_ds,
-    epochs = G.EPOCHS,
-    initial_epoch = 600,                                                        # Start the training in this epoch
+    epochs = EPOCHS,
     validation_data = val_ds,
     callbacks = [ model_checkpoint_callback, learning_rate_callback ]
     )
 
 # SAVE THE MODEL
-path = 'models/'
-cmd = 'mkdir ' + path
-os.system( cmd )
-filename = 'mobilenet_weights_%d' % (G.EPOCHS)
-model.save_weights( path + filename )
+model.save_weights( ODIR + '/mobilenet_weights_' + str(EPOCHS) )

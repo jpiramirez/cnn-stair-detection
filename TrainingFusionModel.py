@@ -50,7 +50,7 @@ def get_image_train( file_path ) :
     img = tf.image.decode_jpeg( img, channels = 3 )
     img = tf.image.convert_image_dtype( img, tf.float32 )                       # To convert to floats in the [0,1] range.
     if( tf.random.uniform(shape=()) > 0.5 ) :
-        img = tf.image.flip_left_right( img )                               # Random flip
+        img = tf.image.flip_left_right( img )                                   # Random flip
     img = ( img - 0.5 ) / 0.5                                                   # To convert the image in the [-1,1] range.
     img = tf.image.resize(img, [G.IMG_SIZE, G.IMG_SIZE])
     return img
@@ -98,7 +98,6 @@ val_ds = prepare_dataset( val_labeled_ds,
 
 # CREATE THE MODEL
 model = M.make_mobilenet_fusion( G.IMG_SHAPE )
-#model.load_weights( 'models/mobilenet_fusion_weights_400' )                     # Current model
 
 # TRAINING THE MODEL
 checkpoint_filepath = '/models/mobilenet_fusion_weights_{epoch:02d}'
@@ -110,7 +109,7 @@ model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     save_best_only = False )
 
 def scheduler( epoch, lr ):
-    if ( epoch + 1 ) % 100 == 0:            # Update lr each 100 epochs
+    if ( epoch + 1 ) % 100 == 0:            # Update lr for each 100 epochs
         return lr * 0.1;                    # Beta = 0.1 (decay)
     else:
         return lr
@@ -120,7 +119,6 @@ learning_rate_callback = tf.keras.callbacks.LearningRateScheduler( scheduler )
 model.fit(
     train_ds,
     epochs = G.EPOCHS,
-    #initial_epoch = 400,                                                        # Start the training in this epoch
     validation_data = val_ds,
     callbacks = [model_checkpoint_callback, learning_rate_callback ]
     )
